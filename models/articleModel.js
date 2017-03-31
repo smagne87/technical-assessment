@@ -1,4 +1,4 @@
-module.exports = function(mongoose) {
+module.exports = (mongoose) => {
     var articleSchema = mongoose.Schema({
         _userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         title: String,
@@ -7,7 +7,7 @@ module.exports = function(mongoose) {
     });
 
     var models = { Article: {} };
-    if(!mongoose.model.Article){
+    if (!mongoose.model.Article) {
         models.Article = mongoose.model('Article', articleSchema);
     }
     return models;

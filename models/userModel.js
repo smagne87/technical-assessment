@@ -1,4 +1,4 @@
-module.exports = function (mongoose) {
+module.exports = (mongoose) => {
     var userSchema = mongoose.Schema({
         name: String,
         avatar: String
@@ -9,4 +9,4 @@ module.exports = function (mongoose) {
         models.User = mongoose.model('User', userSchema);
     }
     return models;
-}
+};

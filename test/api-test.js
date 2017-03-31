@@ -1,16 +1,16 @@
-let should = require('should');
-let assert = require('assert');
-let request = require('supertest');
-let mongoose = require('mongoose');
-let winston = require('winston');
-let configEnv = require('../config.env');
-let crypto = require('crypto');
+/* global it, describe */
+const should = require('should');
+const assert = require('assert');
+const request = require('supertest');
+const winston = require('winston');
+const configEnv = require('../config.env');
+const crypto = require('crypto');
 
-describe('Testing Token Validation', function () {
-    it('should validate token', function (done) {
+describe('Testing Token Validation', () => {
+    it('should validate token', (done) => {
         request(configEnv.testUrl)
             .post('/user')
-            .end(function (err, res) {
+            .end((err, res) => {
                 if (err) {
                     throw err;
                 }
@@ -21,13 +21,13 @@ describe('Testing Token Validation', function () {
     });
 });
 
-describe('Testing User/Article API', function () {
+describe('Testing User/Article API', () => {
 
     let _userId = '';
     let _articleId = '';
     const _tag = 'lorem';
 
-    it('should validate required fields for User', function (done) {
+    it('should validate required fields for User', (done) => {
         let user = {
             'name': '',
             'avatar': '',
@@ -38,7 +38,7 @@ describe('Testing User/Article API', function () {
             .post('/user')
             .set({ 'Authorization': token })
             .send(user)
-            .end(function (err, res) {
+            .end((err, res) => {
                 if (err) {
                     throw err;
                 }
@@ -48,7 +48,7 @@ describe('Testing User/Article API', function () {
             });
     });
 
-    it('should create an user', function (done) {
+    it('should create an user', (done) => {
         const user = {
             'name': 'name test',
             'avatar': 'avatar-test',
@@ -59,7 +59,7 @@ describe('Testing User/Article API', function () {
             .post('/user')
             .set({ 'Authorization': token })
             .send(user)
-            .end(function (err, res) {
+            .end((err, res) => {
                 if (err) {
                     throw err;
                 }
@@ -71,7 +71,7 @@ describe('Testing User/Article API', function () {
             });
     });
 
-    it('should validate required fields for Article', function (done) {
+    it('should validate required fields for Article', (done) => {
         const art = {
             '_userId': '',
             'title': '',
@@ -84,7 +84,7 @@ describe('Testing User/Article API', function () {
             .post('/article')
             .set({ 'Authorization': token })
             .send(art)
-            .end(function (err, res) {
+            .end((err, res) => {
                 if (err) {
                     throw err;
                 }
@@ -95,7 +95,7 @@ describe('Testing User/Article API', function () {
     });
 
 
-    it('should create an Article', function (done) {
+    it('should create an Article', (done) => {
         const art = {
             '_userId': _userId,
             'title': 'testing article',
@@ -108,7 +108,7 @@ describe('Testing User/Article API', function () {
             .post('/article')
             .set({ 'Authorization': token })
             .send(art)
-            .end(function (err, res) {
+            .end((err, res) => {
                 if (err) {
                     throw err;
                 }
@@ -119,7 +119,7 @@ describe('Testing User/Article API', function () {
             });
     });
 
-    it('should update an Article', function (done) {
+    it('should update an Article', (done) => {
         const art = {
             'title': 'updating article',
             'text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. update',
@@ -131,7 +131,7 @@ describe('Testing User/Article API', function () {
             .put('/article/' + _articleId)
             .set({ 'Authorization': token })
             .send(art)
-            .end(function (err, res) {
+            .end((err, res) => {
                 if (err) {
                     throw err;
                 }
@@ -141,7 +141,7 @@ describe('Testing User/Article API', function () {
             });
     });
 
-    it('should delete an Article', function (done) {
+    it('should delete an Article', (done) => {
         const art = {
             'date': new Date().toString()
         };
@@ -150,7 +150,7 @@ describe('Testing User/Article API', function () {
             .del('/article/' + _articleId)
             .set({ 'Authorization': token })
             .send(art)
-            .end(function (err, res) {
+            .end((err, res) => {
                 if (err) {
                     throw err;
                 }
@@ -160,7 +160,7 @@ describe('Testing User/Article API', function () {
             });
     });
 
-    it('should retrieve Article with tag', function (done) {
+    it('should retrieve Article with tag', (done) => {
         const art = {
             'date': new Date().toString()
         };
@@ -169,7 +169,7 @@ describe('Testing User/Article API', function () {
             .get('/article/' + _tag)
             .set({ 'Authorization': token })
             .send(art)
-            .end(function (err, res) {
+            .end((err, res) => {
                 if (err) {
                     throw err;
                 }

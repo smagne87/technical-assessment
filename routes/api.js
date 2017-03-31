@@ -1,53 +1,85 @@
-let express = require('express');
-let path = require('path');
-let userController = require('../controllers/userController');
-let articleController = require('../controllers/articleController');
-let crypto = require('crypto');
-let configEnv = require('../config.env');
-let router = express.Router();
+const express = require('express');
+const userController = require('../controllers/userController');
+const articleController = require('../controllers/articleController');
+const crypto = require('crypto');
+const configEnv = require('../config.env');
+const router = express.Router();
 
-router.all('/', function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+router.all('/', (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With');
     next();
 });
 
-router.post('/user', validateToken, function (req, res, next) {
-    userController.createUser(req.body.name, req.body.avatar, function (err, result) {
+router.post('/user-noao', (req, res) => {
+    userController.createUser(req.body.name, req.body.avatar).then((result) => {
         res.jsonp({
             data: result
+        });
+    }).catch((err) => {
+        res.jsonp({
+            data: err
+        });
+    });
+    
+});
+
+router.post('/user', validateToken, (req, res) => {
+    userController.createUser(req.body.name, req.body.avatar).then((result) => {
+        res.jsonp({
+            data: result
+        });
+    }).catch((err) => {
+        res.jsonp({
+            data: err
         });
     });
 });
 
-router.post('/article', validateToken, function (req, res, next) {
-    articleController.createArticle(req.body._userId, req.body.title, req.body.text, req.body.tags, function (err, result) {
+router.post('/article', validateToken, (req, res) => {
+    articleController.createArticle(req.body._userId, req.body.title, req.body.text, req.body.tags).then((result) => {
         res.jsonp({
             data: result
+        });
+    }).catch((err) => {
+        res.jsonp({
+            data: err
         });
     });
 });
 
-router.put('/article/:id', validateToken, function (req, res, next) {
-    articleController.updateArticle(req.params.id, req.body.title, req.body.text, req.body.tags, function (err, result) {
+router.put('/article/:id', validateToken, (req, res) => {
+    articleController.updateArticle(req.params.id, req.body.title, req.body.text, req.body.tags).then((result) => {
         res.jsonp({
             data: result
+        });
+    }).catch((err) => {
+        res.jsonp({
+            data: err
         });
     });
 });
 
-router.delete('/article/:id', validateToken, function (req, res, next) {
-    articleController.removeArticle(req.params.id, function (err, result) {
+router.delete('/article/:id', validateToken, (req, res) => {
+    articleController.removeArticle(req.params.id).then((result) => {
         res.jsonp({
             data: result
+        });
+    }).catch((err) => {
+        res.jsonp({
+            data: err
         });
     });
 });
 
-router.get('/article/:tag', validateToken, function (req, res, next) {
-    articleController.getArticlesByTags(req.params.tag, function (err, result) {
+router.get('/article/:tag', validateToken, (req, res) => {
+    articleController.getArticlesByTags(req.params.tag).then((result) => {
         res.jsonp({
             data: result
+        });
+    }).catch((err) => {
+        res.jsonp({
+            data: err
         });
     });
 });

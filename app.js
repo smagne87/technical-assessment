@@ -1,25 +1,22 @@
-let express = require('express');
-let path = require('path');
-let mongoose = require('mongoose');
-let http = require('http');
-let logger = require('morgan');
-let cookieParser = require('cookie-parser');
-let bodyParser = require('body-parser');
-let configEnv = require('./config.env');
+/* global */
+const express = require('express');
+const mongoose = require('mongoose');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const configEnv = require('./config.env');
+const Promise = require('bluebird');
 
-mongoose.connection.on('open', function (ref) {
-    console.log('Connected to mongo server.');
+mongoose.connection.on('open',  () => {
 });
-mongoose.connection.on('error', function (err) {
-    console.log('Could not connect to mongo server!');
-    console.log(err);
+mongoose.connection.on('error', () => {
 });
 
-let mongoConnectionString = configEnv.mongodbConnString;
-
+const mongoConnectionString = configEnv.mongodbConnString;
+mongoose.Promise = Promise;
 mongoose.connect(mongoConnectionString);
 
-let api = require('./routes/api');
+const api = require('./routes/api');
 let app = express();
 
 // uncomment after placing your favicon in /public

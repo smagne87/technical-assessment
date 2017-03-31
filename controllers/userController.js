@@ -1,41 +1,47 @@
-let mongoose = require('mongoose');
-let models = require('../models/userModel')(mongoose);
+const mongoose = require('mongoose');
+const models = require('../models/userModel')(mongoose);
+const Promise = require('bluebird');
+Promise.promisifyAll(models.User);
+Promise.promisifyAll(models.User.prototype);
 
 let uController = module.exports = {};
 
-uController.createUser = function (name, avatar, callback) {
-    let result = {
-        success: true,
-        message: "",
-        user: {}
-    };
+uController.createUser = function (name, avatar) {
+    return new Promise((resolve, reject) => {
+        let result = {
+            success: true,
+            message: '',
+            user: {}
+        };
 
-    if (!name || name == '') {
-        result.success = false;
-        result.message = 'name is required';
-        callback(null, result);
-    }
-
-    if (!avatar || avatar == '') {
-        result.success = false;
-        result.message = 'avatar is required';
-        callback(null, result);
-    }
-
-    if (result.success) {
-        let u = new models.User();
-        u.name = name;
-        u.avatar = avatar;
-        u.save(function (err) {
-            if (err) {
-                console.log(err);
+        try {
+            if (!name || name == '') {
                 result.success = false;
-                result.message = 'Unexpected error!';
+                result.message = 'name is required';
+                resolve(result);
             }
-            else {
-                result.user = u;
+
+            if (!avatar || avatar == '') {
+                result.success = false;
+                result.message = 'avatar is required';
+                resolve(result);
             }
-            callback(err, result);
-        });
-    }
+
+            if (result.success) {
+                let u = new models.User();
+                u.name = name;
+                u.avatar = avatar;
+                u.saveAsync().then((savedUser) => {
+                    result.user = savedUser;
+                    resolve(result);
+                }).catch(() => {
+                    result.success = false;
+                    result.message = 'Unexpected error!';
+                    reject(result);
+                });
+            }
+        } catch (err) {
+            reject(err);
+        }
+    });
 };
